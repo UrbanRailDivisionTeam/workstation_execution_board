@@ -1,0 +1,17 @@
+[project]
+name = "workstation-execution-board"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "clickhouse-connect>=0.13.0",
+    "holidays>=0.25",
+    "litestar[standard]>=2.18.0",
+    "pandas>=3.0.1",
+    "sniffio>=1.3.1",
+]
+# 部署到内网后想要更新依赖需要解除以下注释
+# [[tool.uv.index]]
+# url = "http://10.29.1.242:3003/pip/simple"
+# default = true

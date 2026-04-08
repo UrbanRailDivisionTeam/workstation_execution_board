@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+    # ClickHouse 数据库
+    clickhouse:
+        image:  clickhouse:25.8.11.66-jammy
+        container_name: clickhouse_database
+        restart: unless-stopped
+        ports:
+            - 8123:8123
+            - 9000:9000
+        ulimits:
+            nofile:
+                soft: 262144
+                hard: 262144
+        cap_add:
+            - IPC_LOCK
+            - SYS_NICE
+        environment:
+            CLICKHOUSE_USER: cheakf
+            CLICKHOUSE_PASSWORD: Swq8855830.
+            TZ: Asia/Shanghai
+        volumes:
+            - clickhouse_data:/var/lib/clickhouse
+            - clickhouse_logs:/var/log/clickhouse-server
+
+volumes:
+    clickhouse_data:
+        driver: local
+    clickhouse_logs:
+        driver: local
