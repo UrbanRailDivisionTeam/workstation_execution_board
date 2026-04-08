@@ -24,7 +24,7 @@ mimetypes.add_type("application/javascript", ".js")
 # - CH_USER: 数据库用户名
 # - CH_PASSWORD: 数据库密码
 # - CH_DATABASE: 默认数据库名称
-CH_HOST = os.getenv("CLICKHOUSE_HOST", "localhost")
+CH_HOST = os.getenv("CLICKHOUSE_HOST", "10.24.5.59")
 CH_PORT = int(os.getenv("CLICKHOUSE_PORT", "8123"))
 CH_USER = os.getenv("CLICKHOUSE_USER", "cheakf")
 CH_PASSWORD = os.getenv("CLICKHOUSE_PASSWORD", "Swq8855830.")
@@ -472,4 +472,4 @@ if __name__ == "__main__":
     # - port=12386: 监听端口号
     # - reload=True: 开启热重载，修改代码后自动重启
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=12386, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=12384)
