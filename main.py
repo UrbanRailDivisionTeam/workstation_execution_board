@@ -105,12 +105,11 @@ from collections import Counter
 # ============================================================
 
 @get("/api/table-data")
-async def get_table_data(team: str = None, team2: str = None) -> dict:
+async def get_table_data(team: str = None) -> dict:
     """
     获取表格数据的主API接口
     参数:
-        - team: 班组名称过滤（用于节拍兑现率趋势）
-        - team2: 班组名称过滤（用于准时开完工率趋势）
+        - team: 班组名称过滤（控制整个页面的所有数据）
     返回:
         - table_data: 今日执行队列数据
         - summary: 汇总统计数据
@@ -122,12 +121,15 @@ async def get_table_data(team: str = None, team2: str = None) -> dict:
         # ===================== 3.1 主查询 =====================
         # 查询当前月及近7天的生产计划数据
         # 包含字段：项目号、车号、节车号、排程时间、计划时间、实际时间、班组、是否兑现节拍、是否准时开完工
-        query = """
+        team_filter = f"AND BILL.`班组名称` = '{team}'" if team else ""
+        query = f"""
             SELECT 
                 today() as ch_today,  -- 获取数据库当前日期
                 BILL.`项目号` , 
                 BILL.`车号` , 
                 BILL.`节车号` , 
+                BILL.`工序编码`,
+                BILL.`工序名称`,
                 BILL.`排程开始时间` , 
                 BILL.`排程结束时间` , 
                 BILL.`计划开始时间` , 
@@ -140,9 +142,10 @@ async def get_table_data(team: str = None, team2: str = None) -> dict:
             FROM 
                 dwd.beat_fulfillment_rate BILL 
             WHERE 
-                (toStartOfMonth(toDate(BILL.`计划开始时间`)) = toStartOfMonth(today())  -- 本月数据
+                ((toStartOfMonth(toDate(BILL.`计划开始时间`)) = toStartOfMonth(today())  -- 本月数据
                 OR toDate(BILL.`实际结束时间`) = today()  -- 今日完工数据
                 OR (toDate(BILL.`计划开始时间`) >= today() - INTERVAL 6 DAY AND toDate(BILL.`计划开始时间`) <= today()))  -- 近7天计划
+                {team_filter})
             ORDER BY 
                 BILL.`计划开始时间` DESC
         """
@@ -169,7 +172,7 @@ async def get_table_data(team: str = None, team2: str = None) -> dict:
         
         # ===================== 3.3 准时开完工率趋势查询 =====================
         # 查询近7天的准时开完工率，按日期分组
-        team2_filter = f"AND BILL.`班组名称` = '{team2}'" if team2 else ""
+        team_filter = f"AND BILL.`班组名称` = '{team}'" if team else ""
         ontime_trend_query = f"""
             SELECT 
                 toDate(BILL.`计划开始时间`) as plan_date,  -- 计划开工日期
@@ -180,7 +183,7 @@ async def get_table_data(team: str = None, team2: str = None) -> dict:
             WHERE 
                 toDate(BILL.`计划开始时间`) >= today() - INTERVAL 6 DAY
                 AND toDate(BILL.`计划开始时间`) <= today()
-                {team2_filter}
+                {team_filter}
             GROUP BY toDate(BILL.`计划开始时间`)
             ORDER BY plan_date
         """
@@ -257,11 +260,16 @@ async def get_table_data(team: str = None, team2: str = None) -> dict:
                     is_overtime = True
             
             # ===================== 统计本月指标 =====================
-            # 严格按照用户要求：统计计划开始时间在本月的数据
+            # 严格按照用户要求：
+            # - 分母：本月实际结束时间不为空且不为1970-01-01的数据数量
+            # - 分子：实际时长 <= 排程时长的数据数量
             if plan_start and plan_start.year == local_today.year and plan_start.month == local_today.month:
-                month_total += 1
-                if row['是否兑现节拍'] == '是':
-                    month_beat_ok += 1
+                if is_valid_time(actual_end):
+                    month_total += 1
+                    scheduled_duration_val = (plan_end - plan_start).total_seconds() / 60 if plan_start and plan_end else None
+                    actual_duration_val = (actual_end - actual_start).total_seconds() / 60 if actual_start else None
+                    if scheduled_duration_val is not None and actual_duration_val is not None and actual_duration_val <= scheduled_duration_val:
+                        month_beat_ok += 1
                 if row['是否准时开完工'] == '是':
                     month_on_time_ok += 1
 
@@ -269,8 +277,11 @@ async def get_table_data(team: str = None, team2: str = None) -> dict:
             # 应完工序数量：统计计划开工时间为今日的数据数量
             if plan_start and plan_start.date() == local_today:
                 today_scheduled += 1
-                if row['是否兑现节拍'] == '是':
-                    today_beat_ok += 1
+                if is_valid_time(actual_end):
+                    scheduled_duration_val = (plan_end - plan_start).total_seconds() / 60 if plan_start and plan_end else None
+                    actual_duration_val = (actual_end - actual_start).total_seconds() / 60 if actual_start else None
+                    if scheduled_duration_val is not None and actual_duration_val is not None and actual_duration_val <= scheduled_duration_val:
+                        today_beat_ok += 1
                 if row['是否准时开完工'] == '是':
                     today_on_time_ok += 1
             # 已完成数量：统计实际结束时间为今日的数据数量
@@ -318,6 +329,8 @@ async def get_table_data(team: str = None, team2: str = None) -> dict:
                     "project": row['项目号'],
                     "train_no": row['车号'],
                     "car_no": row['节车号'],
+                    "process_code": row['工序编码'],
+                    "process_name": row['工序名称'],
                     "plan_start": format_time(plan_start),
                     "plan_end": format_time(plan_end),
                     "actual_start": format_time(actual_start),
@@ -366,9 +379,8 @@ async def get_table_data(team: str = None, team2: str = None) -> dict:
             last_7_days_beat.append({"date": d.strftime("%m-%d"), "rate": beat_rate})
         
         # ===================== 计算准时率趋势 =====================
-        # 如果选择了 team2，则使用独立查询的 ontime_trend_result
-        # 否则使用全量数据 days_dict
-        if team2:
+        # 使用 team 参数控制准时率趋势数据
+        if team:
             # 使用独立查询的准时率数据
             ontime_days_dict = {}
             for d in workdays:

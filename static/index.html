@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>工位执行监控 - CRRC Manufacturing Intelligence</title>
+    <link rel="icon" href="/static/favicon.ico">
     <script src="/static/tailwindcss.js"></script>
     <link
         href="/static/googleapis.css"
@@ -177,12 +178,29 @@
             <div class="flex items-center gap-6">
                 <h1 class="text-4xl font-black tracking-tighter text-[#E2E2E2] font-headline">工位执行监控</h1>
                 <div class="h-6 w-[3px] bg-surface-container-highest"></div>
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary-container text-4xl" 
-                    style="font-variation-settings: 'FILL' 1;"></span>
-                    <span class="material-symbols-outlined text-primary-container text-4xl"
-                        style="font-variation-settings: 'FILL' 1;"></span>
-                </div>
+                <select id="team-filter" class="bg-surface-container-highest text-white text-[14px] px-3 py-1 rounded border border-surface-container-highest/30 focus:outline-none focus:border-primary-container">
+                    <option value="车内电工班" selected>车内电工班</option>
+                    <option value="车外电工班">车外电工班</option>
+                    <option value="预组装班">预组装班</option>
+                    <option value="车内钳工班">车内钳工班</option>
+                    <option value="车外钳工班">车外钳工班</option>
+                    <option value="粘接综合班">粘接综合班</option>
+                    <option value="线槽地板班">线槽地板班</option>
+                    <option value="内装一班">内装一班</option>
+                    <option value="内装二班">内装二班</option>
+                    <option value="校线一班">校线一班</option>
+                    <option value="校线二班">校线二班</option>
+                    <option value="调试一班">调试一班</option>
+                    <option value="调试二班">调试二班</option>
+                    <option value="调试三班">调试三班</option>
+                    <option value="调试四班">调试四班</option>
+                    <option value="落车班">落车班</option>
+                    <option value="调车班">调车班</option>
+                    <option value="质检班">质检班</option>
+                    <option value="设备工位">设备工位</option>
+                    <option value="车门工位">车门工位</option>
+                    <option value="辅助工位">辅助工位</option>
+                </select>
             </div>
             <div class="flex items-center gap-8">
                 <div class="flex items-center gap-6">
@@ -219,17 +237,17 @@
                     </div>
                     <div class="flex items-end justify-between gap-2">
                         <div class="flex flex-col">
-                            <span id="today-scheduled" class="text-3xl font-black font-space">0</span>
+                            <span id="today-scheduled" class="text-3xl font-black font-space"></span>
                             <span class="text-[16px] uppercase font-serif font-headline">应完工序</span>
                         </div>
                         <div class="h-8 w-[1px] bg-surface-container-highest"></div>
                         <div class="flex flex-col">
-                            <span id="today-completed" class="text-3xl font-black font-space text-white">0</span>
+                            <span id="today-completed" class="text-3xl font-black font-space text-white"></span>
                             <span class="text-[16px] uppercase font-serif font-headline">已完成</span>
                         </div>
                         <div class="h-8 w-[1px] bg-surface-container-highest"></div>
                         <div class="flex flex-col">
-                            <span id="today-remaining" class="text-3xl font-black font-space text-primary-container">0</span>
+                            <span id="today-remaining" class="text-3xl font-black font-space text-primary-container"></span>
                             <span class="text-[16px] uppercase font-serif font-headline">剩余量</span>
                         </div>
                     </div>
@@ -244,7 +262,7 @@
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
-                                <span id="month-beat-rate" class="text-3xl font-black font-space">0.0</span>
+                                <span id="month-beat-rate" class="text-3xl font-black font-space"></span>
                                 <span class="text-lg font-space opacity-50">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-primary-container font-label"></p>
@@ -256,7 +274,7 @@
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
-                                <span id="month-on-time-rate" class="text-3xl font-black font-space">0.0</span>
+                                <span id="month-on-time-rate" class="text-3xl font-black font-space"></span>
                                 <span class="text-lg font-space opacity-50">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-primary-container font-label"></p>
@@ -270,7 +288,7 @@
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
-                                <span id="today-beat-rate" class="text-3xl font-black font-space">0.0</span>
+                                <span id="today-beat-rate" class="text-3xl font-black font-space"></span>
                                 <span class="text-lg font-space opacity-50">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-[#e2e2e2] font-serif font-label"></p>
@@ -282,7 +300,7 @@
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
-                                <span id="today-on-time-rate" class="text-3xl font-black font-space text-[#e2e2e2] font-serif">0.0</span>
+                                <span id="today-on-time-rate" class="text-3xl font-black font-space text-[#e2e2e2] font-serif"></span>
                                 <span class="text-lg font-space opacity-50 text-[#e2e2e2] font-serif">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-[#e2e2e2] font-serif font-label"></p>
@@ -296,40 +314,15 @@
                     class="bg-surface-container-low p-6 flex flex-col relative group overflow-hidden border border-surface-container-highest/10">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-[22px] font-bold tracking-widest font-headline uppercase">7日节拍兑现率趋势分析</h3>
-                        <div class="flex gap-2 items-center">
-                            <select id="team-filter" class="bg-surface-container-highest text-white text-[12px] px-3 py-1 rounded border border-surface-container-highest/30 focus:outline-none focus:border-primary-container">
-                                <option value="车内电工班" selected>车内电工班</option>
-                                <option value="车外电工班">车外电工班</option>
-                                <option value="预组装班">预组装班</option>
-                                <option value="车内钳工班">车内钳工班</option>
-                                <option value="车外钳工班">车外钳工班</option>
-                                <option value="粘接综合班">粘接综合班</option>
-                                <option value="线槽地板班">线槽地板班</option>
-                                <option value="内装一班">内装一班</option>
-                                <option value="内装二班">内装二班</option>
-                                <option value="校线一班">校线一班</option>
-                                <option value="校线二班">校线二班</option>
-                                <option value="调试一班">调试一班</option>
-                                <option value="调试二班">调试二班</option>
-                                <option value="调试三班">调试三班</option>
-                                <option value="调试四班">调试四班</option>
-                                <option value="落车班">落车班</option>
-                                <option value="调车班">调车班</option>
-                                <option value="质检班">质检班</option>
-                                <option value="设备工位">设备工位</option>
-                                <option value="车门工位">车门工位</option>
-                                <option value="辅助工位">辅助工位</option>
-                            </select>
-                        </div>
                     </div>
                     <div
                         class="flex-1 flex flex-col items-center justify-end pb-4 border-b border-surface-container-highest relative">
                         <div class="w-[92%] relative h-full flex flex-col justify-end">
                             <svg class="absolute inset-0 w-full h-full" preserveaspectratio="none"
                                 viewbox="0 0 360 100">
-                                <path id="beat-trend-path" d="M0,80 L60,75 L120,85 L180,60 L240,70 L300,55 L360,65" fill="none"
-                                    stroke="#c70019" stroke-width="2"></path>
-                                <path id="beat-trend-area" d="M0,80 L60,75 L120,85 L180,60 L240,70 L300,55 L360,65 V100 H0 Z"
+                                <path id="beat-trend-path" d="" fill="none"
+                                    stroke="#C70019" stroke-width="2"></path>
+                                <path id="beat-trend-area" d=""
                                     fill="url(#grad1)" opacity="0.1"></path>
                                 <defs>
                                     <lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
@@ -339,34 +332,6 @@
                                 </defs>
                             </svg>
                             <div id="beat-trend-labels" class="flex items-end justify-between z-10 w-full">
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[14px] font-space text-white">90.2</span>
-                                    <span class="text-[14px] mt-2 font-label text-white">05-18</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[14px] font-space text-white">91.5</span>
-                                    <span class="text-[14px] mt-2 font-label text-white">05-19</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[14px] font-space text-white">89.8</span>
-                                    <span class="text-[14px] mt-2 font-label text-white">05-20</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[14px] font-space text-white">94.1</span> <span
-                                        class="text-[14px] mt-2 font-label text-white">05-21</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[14px] font-space text-white">92.5</span>
-                                    <span class="text-[14px] mt-2 font-label text-white">05-22</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[14px] font-space text-primary-container font-bold">95.0</span>
-                                    <span
-                                        class="text-[14px] mt-2 font-label text-primary-container font-bold">05-23</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[14px] font-space text-white">92.5</span> <span
-                                        class="text-[14px] mt-2 font-label text-white">05-24</span> </div>
                             </div>
                         </div>
                     </div>
@@ -375,40 +340,15 @@
                     class="bg-surface-container-low p-6 flex flex-col relative group overflow-hidden border border-surface-container-highest/10">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-[22px] font-bold tracking-widest font-headline uppercase">7日报工准时率趋势监测</h3>
-                        <div class="flex gap-2 items-center">
-                            <select id="team2-filter" class="bg-surface-container-highest text-white text-[12px] px-3 py-1 rounded border border-surface-container-highest/30 focus:outline-none focus:border-primary-container">
-                                <option value="车内电工班" selected>车内电工班</option>
-                                <option value="车外电工班">车外电工班</option>
-                                <option value="预组装班">预组装班</option>
-                                <option value="车内钳工班">车内钳工班</option>
-                                <option value="车外钳工班">车外钳工班</option>
-                                <option value="粘接综合班">粘接综合班</option>
-                                <option value="线槽地板班">线槽地板班</option>
-                                <option value="内装一班">内装一班</option>
-                                <option value="内装二班">内装二班</option>
-                                <option value="调试一班">调试一班</option>
-                                <option value="调试二班">调试二班</option>
-                                <option value="调试三班">调试三班</option>
-                                <option value="调试四班">调试四班</option>
-                                <option value="校线一班">校线一班</option>
-                                <option value="校线二班">校线二班</option>
-                                <option value="落车班">落车班</option>
-                                <option value="调车班">调车班</option>
-                                <option value="质检班">质检班</option>
-                                <option value="设备工位">设备工位</option>
-                                <option value="车门工位">车门工位</option>
-                                <option value="辅助工位">辅助工位</option>
-                            </select>
-                        </div>
                     </div>
                     <div
                         class="flex-1 flex flex-col items-center justify-end pb-4 border-b border-surface-container-highest relative">
                         <div class="w-[92%] relative h-full flex flex-col justify-end">
                             <svg class="absolute inset-0 w-full h-full" preserveaspectratio="none"
                                 viewbox="0 0 360 100">
-                                <path id="ontime-trend-path" d="M0,60 L60,50 L120,55 L180,45 L240,40 L300,30 L360,45" fill="none"
+                                <path id="ontime-trend-path" d="" fill="none"
                                     stroke="#FFFFFF" stroke-width="2"></path>
-                                <path id="ontime-trend-area" d="M0,60 L60,50 L120,55 L180,45 L240,40 L300,30 L360,45 V100 H0 Z"
+                                <path id="ontime-trend-area" d=""
                                     fill="url(#grad2)" opacity="0.05"></path>
                                 <defs>
                                     <lineargradient id="grad2" x1="0%" x2="0%" y1="0%" y2="100%">
@@ -418,34 +358,6 @@
                                 </defs>
                             </svg>
                             <div id="ontime-trend-labels" class="flex items-end justify-between z-10 w-full">
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[16px] font-space text-white">94.2</span>
-                                    <span class="text-[16px] mt-2 opacity-10 font-label text-white">05-18</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[16px] font-space text-white">95.5</span>
-                                    <span class="text-[16px] mt-2 opacity-10 font-label text-white">05-19</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[16px] font-space text-white">94.8</span>
-                                    <span class="text-[16px] mt-2 opacity-10 font-label text-white">05-20</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[16px] font-space text-white">96.1</span>
-                                    <span class="text-[16px] mt-2 opacity-10 font-label text-white">05-21</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[16px] font-space text-white">97.5</span>
-                                    <span class="text-[16px] mt-2 opacity-10 font-label text-white">05-22</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[16px] font-space text-primary-container font-bold">98.0</span>
-                                    <span
-                                        class="text-[16px] mt-2 opacity-10 font-label font-bold text-primary-container">05-23</span>
-                                </div>
-                                <div class="flex flex-col items-center"> <span
-                                        class="text-[16px] font-space text-white">95.0</span> <span
-                                        class="text-[16px] mt-2 opacity-10 font-label text-white">05-24</span> </div>
                             </div>
                         </div>
                     </div>
@@ -458,7 +370,7 @@
                     <div class="flex items-center gap-4">
                         <span class="w-1 h-4 bg-primary-container"></span>
                         <h3 class="text-[22px] font-bold tracking-widest font-headline">工序任务执行队列</h3>
-                        <span id="total-count" class="bg-surface-container-highest text-[#e2e2e2] text-[14px] px-2 py-0.5 rounded-sm font-space">0</span>
+                        <span id="total-count" class="bg-surface-container-highest text-[#e2e2e2] text-[14px] px-2 py-0.5 rounded-sm font-space"></span>
                     </div>
                     <div class="flex gap-6">
                         <div class="flex items-center gap-2">
@@ -492,6 +404,12 @@
                                 <th
                                     class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     节车号</th>
+                                <th
+                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    工序编码</th>
+                                <th
+                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    工序名称</th>
                                 <th
                                     class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     计划开工时间</th>
@@ -552,14 +470,9 @@
             try {
                 const teamFilter = document.getElementById('team-filter');
                 const team = teamFilter ? teamFilter.value : '';
-                const team2Filter = document.getElementById('team2-filter');
-                const team2 = team2Filter ? team2Filter.value : '';
                 
                 let url = '/api/table-data';
-                const params = [];
-                if (team) params.push(`team=${encodeURIComponent(team)}`);
-                if (team2) params.push(`team2=${encodeURIComponent(team2)}`);
-                if (params.length > 0) url += '?' + params.join('&');
+                if (team) url += '?team=' + encodeURIComponent(team);
                 
                 const response = await fetch(url);
                 const data = await response.json();
@@ -679,6 +592,8 @@
                     <td class="px-4 py-3 text-[12px] font-bold font-space text-on-surface">${row.project}</td>
                     <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.train_no}</td>
                     <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.car_no}</td>
+                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.process_code}</td>
+                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.process_name}</td>
                     <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.plan_start}</td>
                     <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.plan_end}</td>
                     <td class="px-4 py-3 text-[12px] font-space ${row.is_overtime ? 'text-primary-container font-bold' : 'text-on-surface'}">${row.actual_start}</td>
@@ -697,11 +612,6 @@
             const teamFilter = document.getElementById('team-filter');
             if (teamFilter) {
                 teamFilter.addEventListener('change', fetchTableData);
-            }
-            
-            const team2Filter = document.getElementById('team2-filter');
-            if (team2Filter) {
-                team2Filter.addEventListener('change', fetchTableData);
             }
         });
 
