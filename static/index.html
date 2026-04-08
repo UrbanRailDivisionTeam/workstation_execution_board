@@ -8,12 +8,7 @@
     <title>工位执行监控 - CRRC Manufacturing Intelligence</title>
     <link rel="icon" href="/static/favicon.ico">
     <script src="/static/tailwindcss.js"></script>
-    <link
-        href="/static/googleapis.css"
-        rel="stylesheet" />
-    <link
-        href="/static/material_symbolsOutlined.css"
-        rel="stylesheet" />
+    <link href="/static/googleapis.css" rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -86,7 +81,7 @@
             padding: 0;
             background: #131313;
         }
-        
+
         .font-serif {
             font-family: 'Source Han Serif CN', 'Noto Serif SC', serif;
         }
@@ -178,7 +173,8 @@
             <div class="flex items-center gap-6">
                 <h1 class="text-4xl font-black tracking-tighter text-[#E2E2E2] font-headline">工位执行监控</h1>
                 <div class="h-6 w-[3px] bg-surface-container-highest"></div>
-                <select id="team-filter" class="bg-surface-container-highest text-white text-[14px] px-3 py-1 rounded border border-surface-container-highest/30 focus:outline-none focus:border-primary-container">
+                <select id="team-filter"
+                    class="bg-surface-container-highest text-white text-[14px] px-3 py-1 rounded border border-surface-container-highest/30 focus:outline-none focus:border-primary-container">
                     <option value="车内电工班" selected>车内电工班</option>
                     <option value="车外电工班">车外电工班</option>
                     <option value="预组装班">预组装班</option>
@@ -247,18 +243,21 @@
                         </div>
                         <div class="h-8 w-[1px] bg-surface-container-highest"></div>
                         <div class="flex flex-col">
-                            <span id="today-remaining" class="text-3xl font-black font-space text-primary-container"></span>
+                            <span id="today-remaining"
+                                class="text-3xl font-black font-space text-primary-container"></span>
                             <span class="text-[16px] uppercase font-serif font-headline">剩余量</span>
                         </div>
                     </div>
                     <div class="w-full bg-surface-container-highest h-[2px]">
-                        <div id="today-progress" class="bg-primary-container h-full w-[0%]" style="box-shadow: 0 0 10px #c70019;"></div>
+                        <div id="today-progress" class="bg-primary-container h-full w-[0%]"
+                            style="box-shadow: 0 0 10px #c70019;"></div>
                     </div>
                 </div>
                 <div class="col-span-4 grid grid-cols-2 gap-4">
                     <div
                         class="bg-surface-container-low p-5 flex flex-col justify-between border-t border-surface-container-highest/20">
-                        <span class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">每月节拍兑现率
+                        <span
+                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">每月节拍兑现率
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
@@ -270,7 +269,8 @@
                     </div>
                     <div
                         class="bg-surface-container-low p-5 flex flex-col justify-between border-t border-primary-container/40">
-                        <span class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">每月报工准时率
+                        <span
+                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">每月报工准时率
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
@@ -284,7 +284,8 @@
                 <div class="col-span-4 grid grid-cols-2 gap-4">
                     <div
                         class="bg-surface-container-low p-5 flex flex-col justify-between border-t border-surface-container-highest/20">
-                        <span class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">本日节拍兑现率
+                        <span
+                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">本日节拍兑现率
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
@@ -296,11 +297,13 @@
                     </div>
                     <div
                         class="bg-surface-container-low p-5 flex flex-col justify-between border-t border-primary-container">
-                        <span class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">本日报工准时率
+                        <span
+                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">本日报工准时率
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
-                                <span id="today-on-time-rate" class="text-3xl font-black font-space text-[#e2e2e2] font-serif"></span>
+                                <span id="today-on-time-rate"
+                                    class="text-3xl font-black font-space text-[#e2e2e2] font-serif"></span>
                                 <span class="text-lg font-space opacity-50 text-[#e2e2e2] font-serif">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-[#e2e2e2] font-serif font-label"></p>
@@ -320,10 +323,8 @@
                         <div class="w-[92%] relative h-full flex flex-col justify-end">
                             <svg class="absolute inset-0 w-full h-full" preserveaspectratio="none"
                                 viewbox="0 0 360 100">
-                                <path id="beat-trend-path" d="" fill="none"
-                                    stroke="#C70019" stroke-width="2"></path>
-                                <path id="beat-trend-area" d=""
-                                    fill="url(#grad1)" opacity="0.1"></path>
+                                <path id="beat-trend-path" d="" fill="none" stroke="#C70019" stroke-width="2"></path>
+                                <path id="beat-trend-area" d="" fill="url(#grad1)" opacity="0.1"></path>
                                 <defs>
                                     <lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
                                         <stop offset="0%" style="stop-color:#c70019;stop-opacity:1"></stop>
@@ -346,10 +347,8 @@
                         <div class="w-[92%] relative h-full flex flex-col justify-end">
                             <svg class="absolute inset-0 w-full h-full" preserveaspectratio="none"
                                 viewbox="0 0 360 100">
-                                <path id="ontime-trend-path" d="" fill="none"
-                                    stroke="#FFFFFF" stroke-width="2"></path>
-                                <path id="ontime-trend-area" d=""
-                                    fill="url(#grad2)" opacity="0.05"></path>
+                                <path id="ontime-trend-path" d="" fill="none" stroke="#FFFFFF" stroke-width="2"></path>
+                                <path id="ontime-trend-area" d="" fill="url(#grad2)" opacity="0.05"></path>
                                 <defs>
                                     <lineargradient id="grad2" x1="0%" x2="0%" y1="0%" y2="100%">
                                         <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1"></stop>
@@ -370,20 +369,24 @@
                     <div class="flex items-center gap-4">
                         <span class="w-1 h-4 bg-primary-container"></span>
                         <h3 class="text-[22px] font-bold tracking-widest font-headline">工序任务执行队列</h3>
-                        <span id="total-count" class="bg-surface-container-highest text-[#e2e2e2] text-[14px] px-2 py-0.5 rounded-sm font-space"></span>
+                        <span id="total-count"
+                            class="bg-surface-container-highest text-[#e2e2e2] text-[14px] px-2 py-0.5 rounded-sm font-space"></span>
                     </div>
                     <div class="flex gap-6">
                         <div class="flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-primary-container status-pulse"></span>
-                            <span id="summary-overdue" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">已超时 (0)</span>
+                            <span id="summary-overdue" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">已超时
+                                (0)</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-[#00C853]"></span>
-                            <span id="summary-in-progress" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">执行中 (0)</span>
+                            <span id="summary-in-progress" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">执行中
+                                (0)</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-surface-container-highest"></span>
-                            <span id="summary-pending" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">待开工 (0)</span>
+                            <span id="summary-pending" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">待开工
+                                (0)</span>
                         </div>
                     </div>
                 </div>
@@ -470,13 +473,13 @@
             try {
                 const teamFilter = document.getElementById('team-filter');
                 const team = teamFilter ? teamFilter.value : '';
-                
+
                 let url = '/api/table-data';
                 if (team) url += '?team=' + encodeURIComponent(team);
-                
+
                 const response = await fetch(url);
                 const data = await response.json();
-                
+
                 // 确保数据结构正确
                 if (data && data.table_data) {
                     renderTable(data.table_data);
@@ -491,7 +494,7 @@
 
         function renderSummary(summary) {
             if (!summary) return;
-            
+
             // 安全获取数值
             const getVal = (val) => (val !== undefined && val !== null) ? val : 0;
 
@@ -521,8 +524,8 @@
             }
 
             // 更新进度条
-            const progress = summary.today_scheduled > 0 
-                ? (summary.today_completed / summary.today_scheduled) * 100 
+            const progress = summary.today_scheduled > 0
+                ? (summary.today_completed / summary.today_scheduled) * 100
                 : 0;
             document.getElementById('today-progress').style.width = `${progress}%`;
 
@@ -542,13 +545,13 @@
             const pathId = type === 'beat' ? 'beat-trend-path' : 'ontime-trend-path';
             const areaId = type === 'beat' ? 'beat-trend-area' : 'ontime-trend-area';
             const labelsId = type === 'beat' ? 'beat-trend-labels' : 'ontime-trend-labels';
-            
+
             const pathEl = document.getElementById(pathId);
             const areaEl = document.getElementById(areaId);
             const labelsContainer = document.getElementById(labelsId);
-            
+
             if (!pathEl || !areaEl || !labelsContainer) return;
-            
+
             // 计算SVG路径点
             // SVG viewbox is 360x100. 
             // Y=0 is top, Y=100 is bottom. 
@@ -556,24 +559,24 @@
             const width = 360;
             const height = 100;
             const paddingX = 0; // Full width usage
-            
+
             const points = data.map((d, i) => {
                 const x = (i / (data.length - 1)) * width;
                 const y = height - (d.rate / 100 * height);
                 return `${x},${y}`;
             });
-            
+
             const pathD = `M${points.join(' L')}`;
             const areaD = `${pathD} V${height} H0 Z`;
-            
+
             pathEl.setAttribute('d', pathD);
             areaEl.setAttribute('d', areaD);
-            
+
             // 更新标签
             const isToday = (idx) => idx === data.length - 1;
             const primaryClass = type === 'beat' ? 'text-primary-container font-bold' : 'text-white font-bold';
             const defaultClass = 'text-white';
-            
+
             labelsContainer.innerHTML = data.map((d, i) => `
                 <div class="flex flex-col items-center"> 
                     <span class="text-[12px] font-space ${isToday(i) ? primaryClass : defaultClass}">${d.rate}</span>
@@ -608,7 +611,7 @@
             fetchTableData();
             updateTime();
             setInterval(updateTime, 1000);
-            
+
             const teamFilter = document.getElementById('team-filter');
             if (teamFilter) {
                 teamFilter.addEventListener('change', fetchTableData);
