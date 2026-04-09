@@ -24,7 +24,7 @@ mimetypes.add_type("application/javascript", ".js")
 # - CH_USER: 数据库用户名
 # - CH_PASSWORD: 数据库密码
 # - CH_DATABASE: 默认数据库名称
-CH_HOST = os.getenv("CLICKHOUSE_HOST", "10.24.5.59")
+CH_HOST = os.getenv("CLICKHOUSE_HOST", "localhost") # 10.24.5.59
 CH_PORT = int(os.getenv("CLICKHOUSE_PORT", "8123"))
 CH_USER = os.getenv("CLICKHOUSE_USER", "cheakf")
 CH_PASSWORD = os.getenv("CLICKHOUSE_PASSWORD", "Swq8855830.")
@@ -250,7 +250,11 @@ async def get_table_data(team: str = None) -> dict:
             # 检查实际完工时间是否有效（非空且非1970年）
             has_actual_end = is_valid_time(actual_end)
             
-            if has_actual_start and not has_actual_end:
+            if has_actual_start and has_actual_end:
+                # 已完工: 实际开工时间和实际结束时间都存在
+                status = "已完成"
+                is_pending = False
+            elif has_actual_start and not has_actual_end:
                 # 执行中: 实际开工时间存在且实际结束时间不存在
                 status = "执行中"
                 is_pending = False
@@ -320,7 +324,8 @@ async def get_table_data(team: str = None) -> dict:
                 status_map = {
                     "已超时": "bg-primary-container text-white",
                     "执行中": "bg-[#00C853] text-white",
-                    "待开工": "bg-surface-container-highest text-on-surface"
+                    "待开工": "bg-surface-container-highest text-on-surface",
+                    "已完成": "bg-[#00C853] text-white"
                 }
 
                 table_data.append({
@@ -472,4 +477,4 @@ if __name__ == "__main__":
     # - port=12386: 监听端口号
     # - reload=True: 开启热重载，修改代码后自动重启
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=12384)
+    uvicorn.run("main:app", host="0.0.0.0", port=12386) # 12384

@@ -153,7 +153,6 @@
         table {
             border-spacing: 0;
             width: 100%;
-            table-layout: fixed;
         }
 
         th,
@@ -172,9 +171,9 @@
             class="w-full z-50 flex justify-between items-center px-8 h-[7%] bg-[#131313] border-b border-surface-container-highest/30">
             <div class="flex items-center gap-6">
                 <h1 class="text-4xl font-black tracking-tighter text-[#E2E2E2] font-headline">工位执行监控</h1>
-                <div class="h-6 w-[3px] bg-surface-container-highest"></div>
+                <div class="h-6 w-[6px] bg-surface-container-highest"></div>
                 <select id="team-filter"
-                    class="bg-surface-container-highest text-white text-[14px] px-3 py-1 rounded border border-surface-container-highest/30 focus:outline-none focus:border-primary-container">
+                    class="bg-surface-container-highest text-white text-[16px] px-3 py-1 rounded border border-surface-container-highest/30 focus:outline-none focus:border-primary-container">
                     <option value="车内电工班" selected>车内电工班</option>
                     <option value="车外电工班">车外电工班</option>
                     <option value="预组装班">预组装班</option>
@@ -212,8 +211,8 @@
                 </div>
                 <div class="flex items-center gap-3 pl-6 border-l border-surface-container-highest">
                     <div class="text-right">
-                        <p class="text-[18px] font-bold font-headline opacity-40">系统时间</p>
-                        <p id="system-time" class="text-1sm font-space text-primary-container font-bold">2024.05.24
+                        <p class="text-[18px] font-bold font-headline text-[#E2E2E2]">系统时间</p>
+                        <p id="system-time" class="text-[18px] font-space text-primary-container font-bold">2024.05.24
                             14:30:45</p>
                     </div>
                 </div>
@@ -227,25 +226,25 @@
                     class="col-span-4 bg-surface-container-low p-5 flex flex-col justify-between border-t border-surface-container-highest/20">
                     <div class="flex justify-between items-start">
                         <span
-                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-headline">今日生产概况
+                            class="text-[24px] font-black uppercase tracking-widest text-[#e2e2e2] font-serif font-headline">今日生产概况
                         </span>
-                        <span class="material-symbols-outlined opacity-30 text-lg"></span>
+                        <span class="material-symbols-outlined text-lg"></span>
                     </div>
                     <div class="flex items-end justify-between gap-2">
                         <div class="flex flex-col">
                             <span id="today-scheduled" class="text-3xl font-black font-space"></span>
-                            <span class="text-[16px] uppercase font-serif font-headline">应完工序</span>
+                            <span class="text-[18px] font-black uppercase font-serif font-headline">应完工序</span>
                         </div>
                         <div class="h-8 w-[1px] bg-surface-container-highest"></div>
                         <div class="flex flex-col">
                             <span id="today-completed" class="text-3xl font-black font-space text-white"></span>
-                            <span class="text-[16px] uppercase font-serif font-headline">已完成</span>
+                            <span class="text-[18px] font-black uppercase font-serif font-headline">已完成</span>
                         </div>
                         <div class="h-8 w-[1px] bg-surface-container-highest"></div>
                         <div class="flex flex-col">
                             <span id="today-remaining"
                                 class="text-3xl font-black font-space text-primary-container"></span>
-                            <span class="text-[16px] uppercase font-serif font-headline">剩余量</span>
+                            <span class="text-[18px] font-black uppercase font-serif font-headline">剩余量</span>
                         </div>
                     </div>
                     <div class="w-full bg-surface-container-highest h-[2px]">
@@ -257,12 +256,12 @@
                     <div
                         class="bg-surface-container-low p-5 flex flex-col justify-between border-t border-surface-container-highest/20">
                         <span
-                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">每月节拍兑现率
+                            class="text-[24px] font-black uppercase tracking-widest text-[#e2e2e2] font-serif font-label">每月节拍兑现率
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
                                 <span id="month-beat-rate" class="text-3xl font-black font-space"></span>
-                                <span class="text-lg font-space opacity-50">%</span>
+                                <span class="text-lg font-space">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-primary-container font-label"></p>
                         </div>
@@ -270,12 +269,12 @@
                     <div
                         class="bg-surface-container-low p-5 flex flex-col justify-between border-t border-primary-container/40">
                         <span
-                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">每月报工准时率
+                            class="text-[24px] font-black uppercase tracking-widest text-[#e2e2e2] font-serif font-label">每月开完工准时率
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
                                 <span id="month-on-time-rate" class="text-3xl font-black font-space"></span>
-                                <span class="text-lg font-space opacity-50">%</span>
+                                <span class="text-lg font-space">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-primary-container font-label"></p>
                         </div>
@@ -285,12 +284,12 @@
                     <div
                         class="bg-surface-container-low p-5 flex flex-col justify-between border-t border-surface-container-highest/20">
                         <span
-                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">本日节拍兑现率
+                            class="text-[24px] font-black uppercase tracking-widest text-[#e2e2e2] font-serif font-label">本日节拍兑现率
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
                                 <span id="today-beat-rate" class="text-3xl font-black font-space"></span>
-                                <span class="text-lg font-space opacity-50">%</span>
+                                <span class="text-lg font-space">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-[#e2e2e2] font-serif font-label"></p>
                         </div>
@@ -298,13 +297,13 @@
                     <div
                         class="bg-surface-container-low p-5 flex flex-col justify-between border-t border-primary-container">
                         <span
-                            class="text-[22px] font-bold uppercase tracking-widest text-[#e2e2e2] font-serif font-label">本日报工准时率
+                            class="text-[24px] font-black uppercase tracking-widest text-[#e2e2e2] font-serif font-label">本日开完工准时率
                         </span>
                         <div>
                             <div class="flex items-baseline gap-1">
                                 <span id="today-on-time-rate"
                                     class="text-3xl font-black font-space text-[#e2e2e2] font-serif"></span>
-                                <span class="text-lg font-space opacity-50 text-[#e2e2e2] font-serif">%</span>
+                                <span class="text-lg font-space text-[#e2e2e2] font">%</span>
                             </div>
                             <p class="text-[16px] mt-1 text-[#e2e2e2] font-serif font-label"></p>
                         </div>
@@ -316,7 +315,7 @@
                 <div
                     class="bg-surface-container-low p-6 flex flex-col relative group overflow-hidden border border-surface-container-highest/10">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-[22px] font-bold tracking-widest font-headline uppercase">7日节拍兑现率趋势分析</h3>
+                        <h3 class="text-[24px] font-black tracking-widest font-headline uppercase">7日节拍兑现率趋势分析</h3>
                     </div>
                     <div
                         class="flex-1 flex flex-col items-center justify-end pb-4 border-b border-surface-container-highest relative">
@@ -340,7 +339,7 @@
                 <div
                     class="bg-surface-container-low p-6 flex flex-col relative group overflow-hidden border border-surface-container-highest/10">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-[22px] font-bold tracking-widest font-headline uppercase">7日报工准时率趋势监测</h3>
+                        <h3 class="text-[24px] font-black tracking-widest font-headline uppercase">7日开完工准时率趋势监测</h3>
                     </div>
                     <div
                         class="flex-1 flex flex-col items-center justify-end pb-4 border-b border-surface-container-highest relative">
@@ -368,24 +367,24 @@
                 <div class="px-6 py-3 flex justify-between items-center border-b border-surface-container-highest">
                     <div class="flex items-center gap-4">
                         <span class="w-1 h-4 bg-primary-container"></span>
-                        <h3 class="text-[22px] font-bold tracking-widest font-headline">工序任务执行队列</h3>
+                        <h3 class="text-[24px] font-black tracking-widest font-headline">工序任务执行队列</h3>
                         <span id="total-count"
-                            class="bg-surface-container-highest text-[#e2e2e2] text-[14px] px-2 py-0.5 rounded-sm font-space"></span>
+                            class="bg-surface-container-highest text-[#e2e2e2] text-[16px] px-2 py-0.5 rounded-sm font-space"></span>
                     </div>
                     <div class="flex gap-6">
                         <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-primary-container status-pulse"></span>
-                            <span id="summary-overdue" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">已超时
+                            <span class="w-3 h-3 rounded-full bg-primary-container status-pulse"></span>
+                            <span id="summary-overdue" class="text-[16px] font-label font-headline text-[#e2e2e2]">已超时
                                 (0)</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-[#00C853]"></span>
-                            <span id="summary-in-progress" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">执行中
+                            <span class="w-3 h-3 rounded-full bg-[#00C853]"></span>
+                            <span id="summary-in-progress" class="text-[16px] font-label font-headline text-[#e2e2e2]">执行中
                                 (0)</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-surface-container-highest"></span>
-                            <span id="summary-pending" class="text-[16px] font-label opacity-30 text-[#e2e2e2]">待开工
+                            <span class="w-3 h-3 rounded-full bg-surface-container-highest"></span>
+                            <span id="summary-pending" class="text-[16px] font-label font-headline text-[#e2e2e2]">待开工
                                 (0)</span>
                         </div>
                     </div>
@@ -396,40 +395,40 @@
                             class="sticky top-0 bg-surface-container-low z-20 border-b border-surface-container-highest">
                             <tr>
                                 <th
-                                    class="w-[8%] px-6 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-6 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     状态</th>
                                 <th
-                                    class="w-[12%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     项目简称</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     列车号</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     节车号</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     工序编码</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     工序名称</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     计划开工时间</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     计划完工时间</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     实际开工时间</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     实际完工时间</th>
                                 <th
-                                    class="w-[10%] px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
+                                    class="px-4 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-left text-[#e2e2e2]">
                                     排程时长</th>
                                 <th
-                                    class="w-[10%] px-6 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-right text-[#e2e2e2]">
+                                    class="px-6 py-4 text-[16px] font-bold uppercase tracking-widest font-label text-right text-[#e2e2e2]">
                                     执行时长</th>
                             </tr>
                         </thead>
@@ -449,7 +448,7 @@
                     <span class="text-[12px] font-label uppercase text-white">系统运行正常</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[12px] opacity-40">router</span>
+                    <span class="material-symbols-outlined text-[12px]">router</span>
                     <span class="text-[12px] font-label uppercase text-white">延迟：12ms</span>
                 </div>
             </div>
@@ -573,14 +572,15 @@
             areaEl.setAttribute('d', areaD);
 
             // 更新标签
-            const isToday = (idx) => idx === data.length - 1;
-            const primaryClass = type === 'beat' ? 'text-primary-container font-bold' : 'text-white font-bold';
+            const maxRate = Math.max(...data.map(d => d.rate));
+            const isMax = (idx) => data[idx].rate === maxRate;
+            const primaryClass = 'text-primary-container font-bold';
             const defaultClass = 'text-white';
 
             labelsContainer.innerHTML = data.map((d, i) => `
                 <div class="flex flex-col items-center"> 
-                    <span class="text-[12px] font-space ${isToday(i) ? primaryClass : defaultClass}">${d.rate}</span>
-                    <span class="text-[12px] mt-2 opacity-30 font-label ${isToday(i) ? (type === 'beat' ? 'text-primary-container font-bold' : 'text-white font-bold') : 'text-white'}">${d.date}</span>
+                    <span class="text-[14px] font-space ${isMax(i) ? primaryClass : defaultClass}">${d.rate}</span>
+                    <span class="text-[14px] mt-2 font-space ${isMax(i) ? primaryClass : defaultClass}">${d.date}</span>
                 </div>
             `).join('');
         }
@@ -588,21 +588,21 @@
         function renderTable(data) {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = data.map(row => `
-                <tr class="hover:bg-surface-container-high transition-colors ${row.is_pending ? 'opacity-60' : ''}">
+                <tr class="hover:bg-surface-container-high transition-colors ${row.is_pending ? 'text-primary-container font-bold' : ''}">
                     <td class="px-6 py-3">
-                        <span class="${row.status_class} text-[12px] font-black px-1.5 py-0.5 font-label">${row.status}</span>
+                        <span class="${row.status_class} text-[14px] font-black px-1.5 py-0.5 font-label">${row.status}</span>
                     </td>
-                    <td class="px-4 py-3 text-[12px] font-bold font-space text-on-surface">${row.project}</td>
-                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.train_no}</td>
-                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.car_no}</td>
-                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.process_code}</td>
-                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.process_name}</td>
-                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.plan_start}</td>
-                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.plan_end}</td>
-                    <td class="px-4 py-3 text-[12px] font-space ${row.is_overtime ? 'text-primary-container font-bold' : 'text-on-surface'}">${row.actual_start}</td>
-                    <td class="px-4 py-3 text-[12px] font-space ${row.is_overtime ? 'text-primary-container' : 'text-on-surface'}">${row.actual_end}</td>
-                    <td class="px-4 py-3 text-[12px] font-space text-on-surface">${row.scheduled_duration}</td>
-                    <td class="px-6 py-3 text-right text-xs font-space text-on-surface ${row.is_overtime ? 'text-primary-container font-bold' : ''}">${row.execution_duration}</td>
+                    <td class="px-4 py-3 text-[14px] font-bold font-space tracking-wide text-on-surface">${row.project}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide text-on-surface">${row.train_no}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide text-on-surface">${row.car_no}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide text-on-surface">${row.process_code}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide text-on-surface">${row.process_name}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide text-on-surface">${row.plan_start}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide text-on-surface">${row.plan_end}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide ${row.is_overtime ? 'text-primary-container font-bold' : 'text-on-surface'}">${row.actual_start}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide ${row.is_overtime ? 'text-primary-container font-bold' : 'text-on-surface'}">${row.actual_end}</td>
+                    <td class="px-4 py-3 text-[14px] font-space tracking-wide text-on-surface">${row.scheduled_duration}</td>
+                    <td class="px-6 py-3 text-right text-xs font-space tracking-wide text-on-surface ${row.is_overtime ? 'text-primary-container font-bold' : ''}">${row.execution_duration}</td>
                 </tr>
             `).join('');
         }
