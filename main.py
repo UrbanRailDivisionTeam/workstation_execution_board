@@ -328,23 +328,27 @@ async def get_table_data(team: str = None) -> dict:
                     "已完成": "bg-[#00C853] text-white"
                 }
 
-                table_data.append({
-                    "status": status,
-                    "status_class": status_map.get(status, ""),
-                    "project": row['项目号'],
-                    "train_no": row['车号'],
-                    "car_no": row['节车号'],
-                    "process_code": row['工序编码'],
-                    "process_name": row['工序名称'],
-                    "plan_start": format_time(plan_start),
-                    "plan_end": format_time(plan_end),
-                    "actual_start": format_time(actual_start),
-                    "actual_end": format_time(actual_end),
-                    "scheduled_duration": scheduled_duration,
-                    "execution_duration": execution_duration,
-                    "is_overtime": is_overtime,
-                    "is_pending": is_pending
-                })
+                # 只展示待开工、执行中、已超时状态的数据，不展示已完成
+                if status == "已完成":
+                    pass
+                else:
+                    table_data.append({
+                        "status": status,
+                        "status_class": status_map.get(status, ""),
+                        "project": row['项目号'],
+                        "train_no": row['车号'],
+                        "car_no": row['节车号'],
+                        "process_code": row['工序编码'],
+                        "process_name": row['工序名称'],
+                        "plan_start": format_time(plan_start),
+                        "plan_end": format_time(plan_end),
+                        "actual_start": format_time(actual_start),
+                        "actual_end": format_time(actual_end),
+                        "scheduled_duration": scheduled_duration,
+                        "execution_duration": execution_duration,
+                        "is_overtime": is_overtime,
+                        "is_pending": is_pending
+                    })
         
         # ===================== 3.6 计算百分比指标 =====================
         # 本月节拍兑现率 = 本月节拍达标数 / 本月总数 * 100
