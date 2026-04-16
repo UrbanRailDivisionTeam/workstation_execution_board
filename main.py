@@ -1,48 +1,40 @@
-# ============================================================
-# 导入模块
-# ============================================================
-from pathlib import Path  # 用于处理文件路径
-import mimetypes  # 用于处理文件的MIME类型
-import os  # 用于读取环境变量
-import clickhouse_connect  # ClickHouse数据库连接驱动
-from litestar import Litestar, get  # Litestar Web框架
-from litestar.static_files.config import StaticFilesConfig  # 静态文件配置
-from litestar.response import Response  # 响应对象
-from datetime import datetime, time, timedelta, date  # 日期时间处理
-import holidays  # 中国法定节假日
-
-# ============================================================
-# 1. 配置部分
-# ============================================================
+from pathlib import Path
+import mimetypes
+import clickhouse_connect
+from litestar import Litestar, get
+from litestar.static_files.config import StaticFilesConfig
+from litestar.response import Response
+from datetime import datetime, time, timedelta, date 
+import holidays
+import pandas as pd
+import asyncio
+from collections import Counter
 
 # 明确添加 .js 文件的 MIME 类型，确保浏览器能正确识别脚本
 mimetypes.add_type("application/javascript", ".js")
 
-# ClickHouse 连接配置 (从环境变量获取，默认为本地配置)
-# - CH_HOST: 数据库主机地址
-# - CH_PORT: 数据库端口 (默认8123)
-# - CH_USER: 数据库用户名
-# - CH_PASSWORD: 数据库密码
-# - CH_DATABASE: 默认数据库名称
-CH_HOST = os.getenv("CLICKHOUSE_HOST", "10.24.5.59") # 10.24.5.59
-CH_PORT = int(os.getenv("CLICKHOUSE_PORT", "8123"))
-CH_USER = os.getenv("CLICKHOUSE_USER", "cheakf")
-CH_PASSWORD = os.getenv("CLICKHOUSE_PASSWORD", "Swq8855830.")
-CH_DATABASE = os.getenv("CLICKHOUSE_DATABASE", "dwd")
-
-# ============================================================
-# 2. 工具函数部分
-# ============================================================
-
-def get_ch_client():
+_client = None
+async def get_client():
     """获取ClickHouse数据库连接客户端"""
-    return clickhouse_connect.get_client(
-        host=CH_HOST,
-        port=CH_PORT,
-        username=CH_USER,
-        password=CH_PASSWORD,
-        database=CH_DATABASE
-    )
+    global _client
+    if _client is None:
+        _client = await clickhouse_connect.get_async_client(
+            host="10.24.5.59",
+            port=8123,
+            username="cheakf",
+            password="Swq8855830.",
+            database="dwd"
+        )
+    return _client
+
+
+status_map = {
+    "已超时": "bg-primary-container text-white",
+    "执行中": "bg-[#00C853] text-white",
+    "待开工": "bg-surface-container-highest text-on-surface",
+    "已完成": "bg-[#00C853] text-white"
+}
+
 
 def format_time(dt):
     """
@@ -98,14 +90,10 @@ def get_workdays_in_last_n_days(n=7):
     workdays.reverse()
     return workdays
 
-from collections import Counter
 
-# ============================================================
-# 3. API 接口部分
-# ============================================================
 
 @get("/api/table-data")
-async def get_table_data(team: str = None) -> dict:
+async def get_table_data(team: str | None = None) -> dict:
     """
     获取表格数据的主API接口
     参数:
@@ -116,15 +104,15 @@ async def get_table_data(team: str = None) -> dict:
     """
     try:
         # 获取ClickHouse数据库连接客户端
-        client = get_ch_client()
-        
+        client = await get_client()
+        # 过滤用sql
+        team_filter = f"AND BILL.`班组名称` = '{team}'" if team else ""
         # ===================== 3.1 主查询 =====================
         # 查询当前月及近7天的生产计划数据
         # 包含字段：项目号、车号、节车号、排程时间、计划时间、实际时间、班组、是否兑现节拍、是否准时开完工
-        team_filter = f"AND BILL.`班组名称` = '{team}'" if team else ""
         query = f"""
             SELECT 
-                today() as ch_today,  -- 获取数据库当前日期
+                today() AS ch_today,  -- 获取数据库当前日期
                 BILL.`项目号` , 
                 BILL.`车号` , 
                 BILL.`节车号` , 
@@ -142,23 +130,20 @@ async def get_table_data(team: str = None) -> dict:
             FROM 
                 dwd.beat_fulfillment_rate BILL 
             WHERE 
-                ((toStartOfMonth(toDate(BILL.`计划开始时间`)) = toStartOfMonth(today())  -- 本月数据
+                (toStartOfMonth(toDate(BILL.`计划开始时间`)) = toStartOfMonth(today()  -- 本月数据
                 OR toDate(BILL.`实际结束时间`) = today()  -- 今日完工数据
-                OR (toDate(BILL.`计划开始时间`) >= today() - INTERVAL 6 DAY AND toDate(BILL.`计划开始时间`) <= today()))  -- 近7天计划
+                OR toDate(BILL.`计划开始时间`) >= today() - INTERVAL 6 DAY AND toDate(BILL.`计划开始时间`) <= today())  -- 近7天计划
                 {team_filter})
             ORDER BY 
                 BILL.`计划开始时间` DESC
         """
-        result = client.query(query)
-
         # ===================== 3.2 节拍兑现率趋势查询 =====================
         # 查询近7天的节拍兑现率，按日期分组
-        team_filter = f"AND BILL.`班组名称` = '{team}'" if team else ""
         trend_query = f"""
             SELECT 
-                toDate(BILL.`计划开始时间`) as plan_date,  -- 计划开工日期
-                COUNT(*) as total,  -- 总数
-                sum(if(BILL.`是否兑现节拍` = '是', 1, 0)) as beat_ok  -- 节拍达标数
+                toDate(BILL.`计划开始时间`) AS plan_date,  -- 计划开工日期
+                COUNT(*) AS total,  -- 总数
+                sum(if(BILL.`是否兑现节拍` = '是', 1, 0)) AS beat_ok  -- 节拍达标数
             FROM 
                 dwd.beat_fulfillment_rate BILL 
             WHERE 
@@ -168,16 +153,13 @@ async def get_table_data(team: str = None) -> dict:
             GROUP BY toDate(BILL.`计划开始时间`)
             ORDER BY plan_date
         """
-        trend_result = client.query(trend_query)
-        
         # ===================== 3.3 准时开完工率趋势查询 =====================
         # 查询近7天的准时开完工率，按日期分组
-        team_filter = f"AND BILL.`班组名称` = '{team}'" if team else ""
         ontime_trend_query = f"""
             SELECT 
-                toDate(BILL.`计划开始时间`) as plan_date,  -- 计划开工日期
-                COUNT(*) as total,  -- 总数
-                sum(if(BILL.`是否准时开完工` = '是', 1, 0)) as on_time_ok  -- 准时数
+                toDate(BILL.`计划开始时间`) AS plan_date,  -- 计划开工日期
+                COUNT(*) AS total,  -- 总数
+                sum(if(BILL.`是否准时开完工` = '是', 1, 0)) AS on_time_ok  -- 准时数
             FROM 
                 dwd.beat_fulfillment_rate BILL 
             WHERE 
@@ -187,7 +169,18 @@ async def get_table_data(team: str = None) -> dict:
             GROUP BY toDate(BILL.`计划开始时间`)
             ORDER BY plan_date
         """
-        ontime_trend_result = client.query(ontime_trend_query)
+        
+        # 并发查询
+        task_list = [
+            client.query_df(query),
+            client.query_df(trend_query),
+            client.query_df(ontime_trend_query),
+        ]
+        (
+            result,
+            trend_result,
+            ontime_trend_result,
+        ) = await asyncio.gather(*task_list, return_exceptions=False)
         
         # ===================== 3.4 初始化统计变量 =====================
         table_data = []  # 表格数据列表
@@ -217,14 +210,37 @@ async def get_table_data(team: str = None) -> dict:
         for i in range(7):
             d = (date.today() - timedelta(days=6-i))
             days_dict[d] = {"total": 0, "beat_ok": 0, "on_time_ok": 0}
-
-        # 使用本地 today() 进行日期比较，避免时区差异
-        local_today = date.today()
-        print(f"DEBUG: local_today = {local_today}")
-
-        # 调试：检查数据处理前的准备
-        if not result.result_rows:
-            print("DEBUG: 查询结果为空")
+            
+        for index, row in result.iterrows():
+            status = ""
+            if not is_valid_time(row["实际开始时间"]) and not is_valid_time(row["实际结束时间"]):
+                status = "待开工"
+            elif is_valid_time(row["实际开始时间"]) and not is_valid_time(row["实际结束时间"]):
+                if row["计划结束时间"] > 
+                status = "执行中"
+            elif is_valid_time(row["实际开始时间"]) and is_valid_time(row["实际结束时间"]):
+                status = "已完成"    
+            
+            
+            
+            table_data.append({
+                "status": status,
+                "status_class": status_map.get(status, ""),
+                "project": row['项目号'],
+                "train_no": row['车号'],
+                "car_no": row['节车号'],
+                "process_code": row['工序编码'],
+                "process_name": row['工序名称'],
+                "plan_start": format_time(plan_start),
+                "plan_end": format_time(plan_end),
+                "actual_start": format_time(actual_start),
+                "actual_end": format_time(actual_end),
+                "scheduled_duration": scheduled_duration,
+                "execution_duration": execution_duration,
+                "is_overtime": is_overtime,
+                "is_pending": is_pending
+            })
+        
 
         for row in result.named_results():
             # ===================== 3.5 处理每条记录 =====================
@@ -318,15 +334,6 @@ async def get_table_data(team: str = None) -> dict:
                 execution_duration = "--"
                 if is_valid_time(actual_start) and is_valid_time(actual_end):
                     execution_duration = f"{int((actual_end - actual_start).total_seconds() / 60)}M"
-
-                # ===================== 状态颜色映射 =====================
-                # 根据状态类型返回对应的CSS类名，用于前端显示
-                status_map = {
-                    "已超时": "bg-primary-container text-white",
-                    "执行中": "bg-[#00C853] text-white",
-                    "待开工": "bg-surface-container-highest text-on-surface",
-                    "已完成": "bg-[#00C853] text-white"
-                }
 
                 # 只展示待开工、执行中、已超时状态的数据，不展示已完成
                 if status == "已完成":
@@ -433,8 +440,7 @@ async def get_table_data(team: str = None) -> dict:
             }
         }
     except Exception as e:
-        # ===================== 3.9 异常处理 =====================
-        print(f"Error fetching data from ClickHouse: {e}")
+        print(f"从clickhouse中获取数据失败，错误原因为: {e}")
         return {
             "table_data": [], 
             "summary": {
@@ -443,10 +449,6 @@ async def get_table_data(team: str = None) -> dict:
                 "today_scheduled": 0, "today_completed": 0, "today_remaining": 0
             }
         }
-
-# ============================================================
-# 4. 静态页面路由
-# ============================================================
 
 @get("/")
 async def index_html() -> Response:
@@ -457,10 +459,6 @@ async def index_html() -> Response:
         content=html_content,
         media_type="text/html"
     )
-
-# ============================================================
-# 5. 应用启动配置
-# ============================================================
 
 app = Litestar(
     route_handlers=[index_html, get_table_data],  # 注册路由处理器
@@ -474,11 +472,6 @@ app = Litestar(
     ]
 )
 
-# ===================== 主程序入口 =====================
 if __name__ == "__main__":
-    # 启动 uvicorn 服务器
-    # - host="0.0.0.0": 监听所有网络接口
-    # - port=12386: 监听端口号
-    # - reload=True: 开启热重载，修改代码后自动重启
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=12384) # 12384
+    uvicorn.run("main:app", host="0.0.0.0", port=12384)
