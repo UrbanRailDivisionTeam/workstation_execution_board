@@ -519,10 +519,15 @@ async def get_table_data(team: str | None = None) -> dict:
                 "today_remaining": 0,
             },
         }
-
+        
+@get("/favicon.ico")
+async def favicon() -> Response:
+    """favicon.ico 图标路由"""
+    icon_path = Path("static/favicon.ico")
+    return Response(content=icon_path.read_bytes(), media_type="image/x-icon")
 
 app = Litestar(
-    route_handlers=[index_html, get_table_data],  # 注册路由处理器
+    route_handlers=[index_html,favicon, get_table_data],  # 注册路由处理器
     debug=True,  # 开启调试模式
     static_files_config=[
         StaticFilesConfig(
