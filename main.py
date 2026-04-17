@@ -143,7 +143,7 @@ def get_workdays_in_last_n_days(n=7):
     获取近N个工作日日期（排除法定节假日和周末）
     返回包含N个工作日的列表
     """
-    cn_holidays = holidays.CN(years=range(2020, 2030))
+    cn_holidays = holidays.CN(years=range(2020, 2030)) # type: ignore
     workdays = []
     current_date = date.today()
 
