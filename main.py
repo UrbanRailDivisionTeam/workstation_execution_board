@@ -191,7 +191,7 @@ async def get_table_data(team: str | None = None) -> dict:
                 BILL.`实际开始时间` , 
                 BILL.`实际结束时间` , 
                 BILL.`班组名称` , 
-                BILL.`排程结束时间` ,
+                BILL.`排程执行时间` ,
                 BILL.`实际执行时间` ,
                 BILL.`当前工序状态` ,
                 BILL.`是否兑现节拍` , 
